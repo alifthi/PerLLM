@@ -1,6 +1,6 @@
 import tensorflow as tf
 # scales dot product attention
-class attention(tf.keras.layers.Layer):
+class scaledDotProductAttention(tf.keras.layers.Layer):
     def __init__(self,Dv,Dk) -> None:
         super().__init__()
         self.Dk = Dk

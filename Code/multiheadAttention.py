@@ -13,7 +13,7 @@ class multiheadAttention(tf.keras.layers.Layer):
                             trainable=True,name = 'query weights')
     def call(self,inputs):
         heads = []
-        for i in range(self.nHead):
+        for _ in range(self.nHead):
             heads.append(scaledDotProductAttention(Dv = self.Dv,Dk = self.Dk)(inputs))
         multiHead = tf.concat(heads,axis = -1)
         return tf.matmul(multiHead,self.Wo)

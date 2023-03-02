@@ -10,3 +10,5 @@ class Encoder(tf.keras.layers.Layer):
         self.Dv = Dv
         self.nHead = nHead                  # number of heads in multihead attention
         self.denseDim = denseDim            # dimention of middle feed forward network    
+    def build(self,inputShape):
+        self.attention = multiheadAttention(Dk = self.Dk,Dv = self.Dv,nHead=self.nHead)

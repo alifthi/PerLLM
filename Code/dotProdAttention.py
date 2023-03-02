@@ -19,4 +19,4 @@ class scaledDotProductAttention(tf.keras.layers.Layer):
         K = tf.matmul(inputs[1],self.wK)
         V = tf.matmul(inputs[2],self.wV)
         dotProd = tf.matmul(Q,tf.transpose(K))/64
-        return tf.matmul(dotProd,V)
+        return tf.matmul(tf.keras.activations.softmax(dotProd),V)

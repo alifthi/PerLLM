@@ -14,8 +14,6 @@ class scaledDotProductAttention(tf.keras.layers.Layer):
                             trainable=True,name = 'key weights')
         self.wV = tf.Variable(initial_value = random(shape = [inputDim[2][-1],self.Dv],dtype='float'),
                             trainable=True,name = 'value weights')
-
-            
     def call(self,inputs):
         Q = tf.matmul(inputs[0],self.wQ)
         K = tf.matmul(inputs[1],self.wK)

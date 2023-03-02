@@ -1,6 +1,7 @@
 import tensorflow as tf
 from multiheadAttention import multiheadAttention 
 from tensorflow.keras import layers as ksl
+import numpy as np
 class Encoder(tf.keras.layers.Layer):
     def __init__(self,denseDim = 2048,numEncoder = 6,Dv = 64,Dk = 512,nHead = 8):
         super().__init__()
@@ -11,8 +12,14 @@ class Encoder(tf.keras.layers.Layer):
         self.denseDim = denseDim            # dimention of middle feed forward network    
     def build(self,inputShape):
         self.attention = multiheadAttention(Dk = self.Dk,Dv = self.Dv,nHead=self.nHead)
+        self.posEncoding = np.zeros((inputShape[0], self.Dk))
+        for k in range(inputShape[0]):
+            for i in np.arange(int(self.Dk/2)):
+                denominator = np.power(10000, 2*i/self.Dk)
+                self.posEncoding[k, 2*i] = np.sin(k/denominator)
+                self.posEncoding[k, 2*i+1] = np.cos(k/denominator)
     def call(self,inputs):
-        y = inputs
+        y = inputs + self.posEncoding
         for _ in range(self.numEncoder):
             x = self.attention([y,y,y])
             x =  ksl.Add()([y,x])

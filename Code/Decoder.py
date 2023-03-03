@@ -9,3 +9,10 @@ class Decoder(tf.keras.layers.Layer):
         self.nHead = nHead                  # number of heads in multihead attention
         self.denseDim = denseDim
         self.encoder = encoder()
+    def build(self,inputShape):
+            from multiheadAttention import multiheadAttention 
+            self.maskedAttention = multiheadAttention(Dk = self.Dk,Dv = self.Dv,
+                                                      nHead=self.nHead,masked=True)
+            self.attention = multiheadAttention(Dk = self.Dk,Dv = self.Dv,
+                                                      nHead=self.nHead)
+            self.posEncoding = self.encoder(inputShape=inputShape[1])

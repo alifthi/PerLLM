@@ -8,3 +8,7 @@ class utils:
     def loadData(self):
         self.trainData = pd.read_csv(self.dataDir + 'train.csv')
         self.testData = pd.read_csv(self.dataDir + 'test.csv')
+    @staticmethod
+    def preprocess(data):
+        data['article'] = data['article'].str.replace('[^\w\s]','')
+        data['article'] = data['article'].str.replace('\([^)]*\)','')

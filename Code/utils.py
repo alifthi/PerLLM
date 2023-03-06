@@ -16,3 +16,4 @@ class utils:
         tok = tf.keras.preprocessing.text.Tokenizer()
         tok.fit_on_texts(list(data['article'].astype(str))) 
         text = tok.texts_to_sequences(list(data['article'].astype(str)))
+        text = tf.keras.preprocessing.sequence.pad_sequences(text)

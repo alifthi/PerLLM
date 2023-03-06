@@ -12,3 +12,4 @@ class utils:
     def preprocess(data):
         data['article'] = data['article'].str.replace('[^\w\s]','')
         data['article'] = data['article'].str.replace('\([^)]*\)','')
+        data['highlights'] = '_start_' + ' ' + data['highlights'].str.replace('[^\w\s]','') + ' ' + '__end__'

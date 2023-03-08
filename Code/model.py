@@ -23,4 +23,12 @@ class model:
         x = ksl.Dense(self.inputSize[1],activation = 'softmax')(x)
         model = tf.keras.Model([encoderInput,decoderInput],x)
         return model
-        
+    def compileModel(self):
+        from tensorflow.keras import optimizers as optim
+        opt = optim.SGD(lr=0.1)  
+        self.net.compile(optimizer = opt,loss = tf.keras.losses.SparseCategoricalCrossentropy(),metrics = ['accuracy'])
+        self.net.summary()    
+    def trainModel(self,trainData,batchSize = 128,epochs = 10,validationData = None):
+        pass
+    def plotHistory(self):
+        pass

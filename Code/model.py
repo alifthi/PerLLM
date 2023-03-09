@@ -29,6 +29,6 @@ class model:
         self.net.compile(optimizer = opt,loss = tf.keras.losses.SparseCategoricalCrossentropy(),metrics = ['accuracy'])
         self.net.summary()    
     def trainModel(self,trainData,batchSize = 128,epochs = 10,validationData = None):
-        pass
+        self.net.fit(trainData[:-1],trainData,epochs = epochs,batch_size=batchSize)
     def plotHistory(self):
         pass

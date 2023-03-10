@@ -26,9 +26,21 @@ class model:
     def compileModel(self):
         from tensorflow.keras import optimizers as optim
         opt = optim.SGD(lr=0.1)  
-        self.net.compile(optimizer = opt,loss = tf.keras.losses.SparseCategoricalCrossentropy(),metrics = ['accuracy'])
+        Loss = tf.keras.losses.sparse_categorical_crossentropy()
+        self.net.compile(optimizer = opt,loss = Loss,
+                         metrics = ['accuracy'])
         self.net.summary()    
     def trainModel(self,trainData,batchSize = 128,epochs = 10,validationData = None):
-        self.net.fit(trainData[:-1],trainData,epochs = epochs,batch_size=batchSize)
+        self.net.fit(trainData[:-1],trainData,epochs = epochs,batch_size=batchSize,
+                     validation_data = validationData)
+    def saveModel(self,addr):
+        self.net.save_model(addr)
     def plotHistory(self):
-        pass
+        from matplotlib import pyplot as plt
+        plt.plot(self.hist['accuracy'])
+        plt.plot(self.hist['val_accuracy'])
+        plt.title('Model accuracy')
+        plt.show()
+        plt.plot(self.hist['loss'])
+        plt.plot(self.hist['val_loss'])
+        plt.title('Model losses')

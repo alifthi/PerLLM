@@ -27,12 +27,12 @@ class model:
     def compileModel(self):
         from tensorflow.keras import optimizers as optim
         opt = optim.SGD(lr=0.1)  
-        Loss = tf.keras.losses.sparse_categorical_crossentropy()
+        Loss = tf.keras.losses.SparseCategoricalCrossentropy()
         self.net.compile(optimizer = opt,loss = Loss,
                          metrics = ['accuracy'])
         self.net.summary()    
     def trainModel(self,trainData,batchSize = 128,epochs = 10,validationData = None):
-        self.net.fit(trainData[:-1],trainData,epochs = epochs,batch_size=batchSize,
+        self.net.fit(trainData[:-1],trainData[-1],epochs = epochs,batch_size=batchSize,
                      validation_data = validationData)
     def saveModel(self,addr):
         self.net.save_model(addr)

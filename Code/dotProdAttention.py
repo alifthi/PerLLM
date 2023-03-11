@@ -14,15 +14,14 @@ class scaledDotProductAttention(tf.keras.layers.Layer):
                             trainable=True,name = 'key weights')
         self.wV = tf.Variable(initial_value = random(shape = [inputDim[2][-1],self.Dv],dtype='float'),
                             trainable=True,name = 'value weights')
-        if self.masked:
-            tensor = tf.ones(inputDim)
-            self.mask = -1e10 * tf.Variable(initial_value =tf.linalg.band_part(tensor, 0, -1),name = 'value weights')
 
     def call(self,inputs):
         Q = tf.matmul(inputs[0],self.wQ)
         K = tf.matmul(inputs[1],self.wK)
         V = tf.matmul(inputs[2],self.wV)
-        dotProd = tf.matmul(Q,tf.transpose(K))/64
+        dotProd = tf.matmul(Q,K,transpose_b=True)/64.0
         if  self.masked:
+            tensor = tf.ones(dotProd.shape[1:])
+            self.mask = -1e10 *tf.linalg.band_part(tensor, 0, -1)
             dotProd += self.mask
         return tf.matmul(tf.keras.activations.softmax(dotProd),V)

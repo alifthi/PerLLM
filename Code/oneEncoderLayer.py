@@ -10,7 +10,6 @@ class Encoder(tf.keras.layers.Layer):
         self.denseDim = denseDim            # dimention of middle feed forward network    
     def build(self,inputShape):
         random = tf.random_normal_initializer()
-        self.posEncoding = self.posEncoder(inputShape=inputShape)
         self.Wo = tf.Variable(initial_value = random(shape = [self.nHead*self.Dv,inputShape[-1]],dtype='float'),
                             trainable=True,name = 'query weights')
         self.wQ = tf.Variable(initial_value = random(shape = [inputShape[-1],self.Dk],dtype='float'),
@@ -36,8 +35,8 @@ class Encoder(tf.keras.layers.Layer):
         multiHead = tf.matmul(multiHead,self.Wo)
         x =  ksl.Add()([y,multiHead])
         x =  self.layerNormalization1(x)
-        ff = ksl.dense1(x)
-        ff = ksl.dense2(ff)
+        ff = self.dense1(x)
+        ff = self.dense2(ff)
         x =  ksl.Add()([ff,x])
         y =  self.layerNormalization2(x)
         return y

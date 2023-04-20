@@ -1,5 +1,7 @@
 import tensorflow as tf
-class Encoder(tf.keras.layers.Layer):
+from tensorflow.keras import layers as ksl
+from oneEncoderLayer import Encoder
+class encoderBuilder(tf.keras.layers.Layer):
     def __init__(self,denseDim = 2048,numEncoder = 6,Dv = 64,Dk = 256,nHead = 8):
         super().__init__()
         self.numEncoder = numEncoder        # number of encoders
@@ -8,21 +10,13 @@ class Encoder(tf.keras.layers.Layer):
         self.nHead = nHead                  # number of heads in multihead attention
         self.denseDim = denseDim            # dimention of middle feed forward network    
     def build(self,inputShape):
-        self.posEncoding = self.posEncoder(inputShape=inputShape)
-
+        self.encoders = [encoderBuilder() for _ in range(self.numEncoder)]
     def call(self,inputs):
-        from multiheadAttention import multiheadAttention 
-        from tensorflow.keras import layers as ksl
         y = inputs + self.posEncoding
-        for _ in range(self.numEncoder):
-            x =  multiheadAttention(Dk = self.Dk,Dv = self.Dv,nHead=self.nHead)([y,y,y])
-            x =  ksl.Add()([y,x])
-            x =  ksl.LayerNormalization()(x)
-            ff = ksl.Dense(self.denseDim,activation = 'relu')(x)
-            ff = ksl.Dense(inputs.shape[-1])(ff)
-            x =  ksl.Add()([ff,x])
-            y =  ksl.LayerNormalization()(x)
-        return y
+        x = self.encoders[0](y)
+        for enc in self.encoders[1:]:
+            x = enc(x)
+        return x
     def posEncoder(self,inputShape):
         import numpy as np
         posEncoding = np.zeros((inputShape[1], self.Dk))

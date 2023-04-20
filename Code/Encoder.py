@@ -1,6 +1,7 @@
 import tensorflow as tf
-from tensorflow.keras import layers as ksl
 from oneEncoderLayer import Encoder
+import numpy as np
+
 class encoderBuilder(tf.keras.layers.Layer):
     def __init__(self,denseDim = 2048,numEncoder = 6,Dv = 64,Dk = 256,nHead = 8):
         super().__init__()
@@ -11,7 +12,7 @@ class encoderBuilder(tf.keras.layers.Layer):
         self.denseDim = denseDim            # dimention of middle feed forward network    
     def build(self,inputShape):
         self.posEncoding = self.posEncoder(inputShape=inputShape)
-        self.encoders = [encoderBuilder() for _ in range(self.numEncoder)]
+        self.encoders = [Encoder(denseDim = self.denseDim,numEncoder = self.numEncoder,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numEncoder)]
     def call(self,inputs):
         y = inputs + self.posEncoding
         x = self.encoders[0](y)
@@ -19,7 +20,6 @@ class encoderBuilder(tf.keras.layers.Layer):
             x = enc(x)
         return x
     def posEncoder(self,inputShape):
-        import numpy as np
         posEncoding = np.zeros((inputShape[1], self.Dk))
         for k in range(inputShape[1]):
             for i in np.arange(int(self.Dk/2)):

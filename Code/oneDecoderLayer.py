@@ -1,5 +1,4 @@
 import tensorflow as tf
-from Encoder import Encoder as encoder
 from tensorflow.keras import layers as ksl
 class Decoder(tf.keras.layers.Layer):
     def __init__(self,denseDim = 2048,numDecoder = 6,Dv = 64,Dk = 256,nHead = 8):
@@ -23,9 +22,9 @@ class Decoder(tf.keras.layers.Layer):
         self.layerNormalization2 = ksl.LayerNormalization()
         self.layerNormalization3 = ksl.LayerNormalization()
         self.dense1 = ksl.Dense(self.denseDim,activation = 'relu')
-        self.dense2 = ksl.Dense(inputShape[-1])
+        self.dense2 = ksl.Dense(inputShape[0][-1])
     def call(self,inputs):
-        y = inputs[0] + self.posEncoding
+        y = inputs[0]
         heads = []
         for _ in range(self.nHead):
             Q = tf.matmul(y,self.wQ)

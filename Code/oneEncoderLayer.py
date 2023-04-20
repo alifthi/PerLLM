@@ -1,7 +1,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers as ksl
 class Encoder(tf.keras.layers.Layer):
-    def __init__(self,denseDim = 2048,numEncoder = 6,Dv = 64,Dk = 256,nHead = 8):
+    def __init__(self,denseDim = 512,numEncoder = 2,Dv = 64,Dk = 256,nHead = 8):
         super().__init__()
         self.numEncoder = numEncoder        # number of encoders
         self.Dk = Dk                        

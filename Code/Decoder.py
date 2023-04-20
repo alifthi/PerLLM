@@ -1,5 +1,5 @@
 import tensorflow as tf
-from tensorflow.keras import layers as ksl
+import numpy as np
 from oneDecoderLayer import Decoder
 class decoderBuilder(tf.keras.layers.Layer):
     def __init__(self,denseDim = 2048,numDecoder = 6,Dv = 64,Dk = 256,nHead = 8):
@@ -11,7 +11,7 @@ class decoderBuilder(tf.keras.layers.Layer):
         self.denseDim = denseDim
     def build(self,inputShape):
         self.posEncoding = self.posEncoder(inputShape=inputShape[0])
-        self.decoderLayers = [Decoder() for _ in range(self.numDecoder)]
+        self.decoderLayers = [Decoder(denseDim = self.denseDim,numDecoder = self.numDecoder,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numDecoder)]
     def call(self,inputs):
         y = inputs[0] + self.posEncoding
         x = self.decoderLayers[0](y)
@@ -19,7 +19,6 @@ class decoderBuilder(tf.keras.layers.Layer):
             x = dec(x)
         return x
     def posEncoder(self,inputShape):
-        import numpy as np
         posEncoding = np.zeros((inputShape[1], self.Dk))
         for k in range(inputShape[1]):
             for i in np.arange(int(self.Dk/2)):

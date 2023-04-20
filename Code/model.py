@@ -2,30 +2,31 @@ from Encoder import Encoder as encoder
 from Decoder import Decoder as decoder
 from tensorflow.keras import layers as ksl
 import tensorflow as tf
+from tensorflow.keras import optimizers as optim
 class model:
-    def __init__(self,inputSize,decoderVocabSize,latentDim = 256):
+    def __init__(self,inputSize,decoderVocabSize,encoderVocabSize,latentDim = 256):
         self.inputSize = inputSize
         self.latentDim = latentDim
         self.decoderVocabSize = decoderVocabSize
+        self.encoderVocabSize = encoderVocabSize
     def buildModel(self):
         encoderInput = ksl.Input(self.inputSize[0])
-        x = ksl.Embedding(self.inputSize[0],
+        x = ksl.Embedding(self.encoderVocabSize,
                         self.latentDim,
                         mask_zero=False)(encoderInput)
         x = ksl.BatchNormalization()(x)
-        encoderOutput = encoder()(x)
+        encoderOutput = encoder(denseDim = 128,numEncoder = 2,Dv = 64,Dk = 256,nHead = 4)(x)
 
-        decoderInput = ksl.Input(self.inputSize[0])
+        decoderInput = ksl.Input(self.inputSize[1])
         x  = ksl.Embedding(self.decoderVocabSize,
                            self.latentDim,
                            mask_zero = False)(decoderInput)
-        x = decoder()([x,encoderOutput])
+        x = decoder(denseDim = 128,numEncoder = 2,Dv = 64,Dk = 256,nHead = 4)([x,encoderOutput])
         x = ksl.BatchNormalization()(x)
         x = ksl.Dense(self.decoderVocabSize,activation = 'softmax')(x)
         model = tf.keras.Model([encoderInput,decoderInput],x)
         return model
     def compileModel(self):
-        from tensorflow.keras import optimizers as optim
         opt = optim.SGD(lr=0.1)  
         Loss = tf.keras.losses.SparseCategoricalCrossentropy()
         self.net.compile(optimizer = opt,loss = Loss,

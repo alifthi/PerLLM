@@ -6,10 +6,6 @@ util = utils(dataDir)
 util.loadData()
 text,decoderInput,decoderOutput,decoderVocabSize,encoderVocabSize = util.preprocess(util.trainData)
 
-print(np.shape(text))
-print(np.shape(decoderInput))
-print(decoderVocabSize)
-# model = model(inputSize = [np.shape(text)[1],np.shape(decoderInput)[1]],decoderVocabSize=decoderVocabSize)
 model = model(inputSize = [np.shape(text)[1],np.shape(decoderInput)[1]],decoderVocabSize=decoderVocabSize,encoderVocabSize = encoderVocabSize)
 
 model.net = model.buildModel()

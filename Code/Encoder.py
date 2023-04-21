@@ -12,7 +12,7 @@ class encoderBuilder(tf.keras.layers.Layer):
         self.denseDim = denseDim            # dimention of middle feed forward network    
     def build(self,inputShape):
         self.posEncoding = self.posEncoder(inputShape=inputShape)
-        self.encoders = [Encoder(denseDim = self.denseDim,numEncoder = self.numEncoder,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numEncoder)]
+        self.encoders = [Encoder(denseDim = self.denseDim,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numEncoder)]
     def call(self,inputs):
         y = inputs + self.posEncoding
         x = self.encoders[0](y)

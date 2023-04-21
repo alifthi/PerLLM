@@ -15,13 +15,13 @@ class model:
                         self.latentDim,
                         mask_zero=False)(encoderInput)
         x = ksl.BatchNormalization()(x)
-        encoderOutput = encoder(denseDim = 128,numEncoder = 2,Dv = 64,Dk = 256,nHead = 4)(x)
+        encoderOutput = encoder(denseDim = 32,numEncoder = 2,Dv = 64,Dk = 64,nHead = 2)(x)
 
         decoderInput = ksl.Input(self.inputSize[1])
         x  = ksl.Embedding(self.decoderVocabSize,
                            self.latentDim,
                            mask_zero = False)(decoderInput)
-        x = decoder(denseDim = 128,numDecoder = 2,Dv = 64,Dk = 256,nHead = 4)([x,encoderOutput])
+        x = decoder(denseDim = 32,numDecoder = 2,Dv = 64,Dk = 64,nHead = 2)([x,encoderOutput])
         x = ksl.BatchNormalization()(x)
         x = ksl.Dense(self.decoderVocabSize,activation = 'softmax')(x)
         model = tf.keras.Model([encoderInput,decoderInput],x)
@@ -32,11 +32,13 @@ class model:
         self.net.compile(optimizer = opt,loss = Loss,
                          metrics = ['accuracy'])
         self.net.summary()    
-    def trainModel(self,trainData,batchSize = 128,epochs = 10,validationData = None):
+    def trainModel(self,trainData,batchSize = 10,epochs = 10,validationData = None):
         self.net.fit(trainData[:-1],trainData[-1],epochs = epochs,batch_size=batchSize,
                      validation_data = validationData)
     def saveModel(self,addr):
         self.net.save_model(addr)
+    def loadModel(self,modelAddr):
+        self.net = tf.keras.models.load_model(modelAddr)
     def plotHistory(self):
         from matplotlib import pyplot as plt
         plt.plot(self.hist['accuracy'])

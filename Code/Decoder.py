@@ -11,7 +11,7 @@ class decoderBuilder(tf.keras.layers.Layer):
         self.denseDim = denseDim
     def build(self,inputShape):
         self.posEncoding = self.posEncoder(inputShape=inputShape[0])
-        self.decoderLayers = [Decoder(denseDim = self.denseDim,numDecoder = self.numDecoder,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numDecoder)]
+        self.decoderLayers = [Decoder(denseDim = self.denseDim,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numDecoder)]
     def call(self,inputs):
         y = inputs[0] + self.posEncoding
         x = self.decoderLayers[0](y)

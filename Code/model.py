@@ -1,5 +1,5 @@
-from Encoder import Encoder as encoder
-from Decoder import Decoder as decoder
+from Encoder import encoderBuilder as encoder
+from Decoder import decoderBuilder as decoder
 from tensorflow.keras import layers as ksl
 import tensorflow as tf
 from tensorflow.keras import optimizers as optim
@@ -21,7 +21,7 @@ class model:
         x  = ksl.Embedding(self.decoderVocabSize,
                            self.latentDim,
                            mask_zero = False)(decoderInput)
-        x = decoder(denseDim = 128,numEncoder = 2,Dv = 64,Dk = 256,nHead = 4)([x,encoderOutput])
+        x = decoder(denseDim = 128,numDecoder = 2,Dv = 64,Dk = 256,nHead = 4)([x,encoderOutput])
         x = ksl.BatchNormalization()(x)
         x = ksl.Dense(self.decoderVocabSize,activation = 'softmax')(x)
         model = tf.keras.Model([encoderInput,decoderInput],x)

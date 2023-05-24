@@ -1,5 +1,5 @@
-from Encoder import encoderBuilder as encoder
-from Decoder import decoderBuilder as decoder
+from model.Decoder import decoderBuilder as decoder
+from model.Encoder import encoderBuilder as encoder
 from tensorflow.keras import layers as ksl
 import tensorflow as tf
 from tensorflow.keras import optimizers as optim

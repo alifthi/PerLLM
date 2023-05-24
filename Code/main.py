@@ -1,5 +1,5 @@
 from model import model
-from utils import utils
+from dataRelated.utils import utils
 import numpy as np
 dataDir = r"C:\Users\alifa\Documents\AI\DATA\NLP\cnn_dailymail\\"
 util = utils(dataDir)

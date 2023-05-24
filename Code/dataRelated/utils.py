@@ -1,13 +1,16 @@
 import tensorflow as tf
-import pandas as pd
 from transformers import AutoTokenizer
+import json
 class utils:
-    def __init__(self,dataDir):
-        self.dataDir = dataDir
+    def __init__(self,dataAddr):
+        self.dataAddr = dataAddr
         self.tokenizer = AutoTokenizer.from_pretrained('bert-base-uncased')
+        self.data = []
     def loadData(self):
-        self.trainData = pd.read_csv(self.dataDir + 'train.csv')
-        self.testData = pd.read_csv(self.dataDir + 'test.csv')
+        with open(self.dataAddr,'r') as f:
+            data = json.load(f)
+        for k in data.keys():
+            self.data.append(data[k]['corpus'])
     def preprocess(self,data):
         data['article'] = data['article'].str.replace('[^\w\s]','')
         data['article'] = data['article'].str.replace('\([^)]*\)','')

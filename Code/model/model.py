@@ -1,10 +1,12 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 from model.Decoder import decoderBuilder as decoder
 from model.Encoder import encoderBuilder as encoder
 from tensorflow.keras import layers as ksl
 import tensorflow as tf
 from tensorflow.keras import optimizers as optim
 class model:
-    def __init__(self,inputSize,decoderVocabSize,encoderVocabSize,latentDim = 256):
+    def __init__(self,inputSize,decoderVocabSize,encoderVocabSize,latentDim = 64):
         self.inputSize = inputSize
         self.latentDim = latentDim
         self.decoderVocabSize = decoderVocabSize

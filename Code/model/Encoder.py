@@ -1,3 +1,5 @@
+import os
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 import tensorflow as tf
 from model.oneEncoderLayer import Encoder
 import numpy as np
@@ -14,6 +16,8 @@ class encoderBuilder(tf.keras.layers.Layer):
         self.posEncoding = self.posEncoder(inputShape=inputShape)
         self.encoders = [Encoder(denseDim = self.denseDim,Dv = self.Dv,Dk = self.Dk,nHead = self.nHead) for _ in range(self.numEncoder)]
     def call(self,inputs):
+        print(inputs.shape)
+        print(self.posEncoding.shape)
         y = inputs + self.posEncoding
         x = self.encoders[0](y)
         for enc in self.encoders[1:]:

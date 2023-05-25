@@ -1,13 +1,14 @@
-from model import model
+from model.model import model
 from dataRelated.utils import utils
 import numpy as np
-dataDir = r"C:\Users\alifa\Documents\AI\DATA\NLP\cnn_dailymail\\"
+dataDir = r"~/Documents/project/PerLLm/Data/Data.json"
 util = utils(dataDir)
 util.loadData()
-text,decoderInput,decoderOutput,decoderVocabSize,encoderVocabSize = util.preprocess(util.trainData)
+decoderInput,decoderOutput,decoderVocabSize = util.preprocess(util.data)
 
-model = model(inputSize = [np.shape(text)[1],np.shape(decoderInput)[1]],decoderVocabSize=decoderVocabSize,encoderVocabSize = encoderVocabSize)
+model = model(inputSize = [np.shape(decoderInput)[1],np.shape(decoderInput)[1]],
+              decoderVocabSize=decoderVocabSize,encoderVocabSize = decoderVocabSize)
 
 model.net = model.buildModel()
 model.compileModel()
-model.trainModel([text,decoderInput,decoderOutput])
+model.trainModel([decoderInput,decoderInput,decoderOutput])
